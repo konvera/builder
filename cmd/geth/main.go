@@ -154,7 +154,7 @@ var (
 		utils.GpoIgnoreGasPriceFlag,
 		utils.MinerNotifyFullFlag,
 		configFileFlag,
-	}, utils.NetworkFlags, utils.DatabasePathFlags)
+	}, utils.NetworkFlags, utils.DatabasePathFlags, utils.StateSchemeFlags)
 
 	builderApiFlags = []cli.Flag{
 		utils.BuilderEnabled,
