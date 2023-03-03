@@ -25,4 +25,7 @@ var (
 	storageDeletedMeter    = metrics.NewRegisteredMeter("state/delete/storage", nil)
 	accountTrieNodesMeter  = metrics.NewRegisteredMeter("state/trie/account", nil)
 	storageTriesNodesMeter = metrics.NewRegisteredMeter("state/trie/storage", nil)
+
+	stateCopyMeter     = metrics.NewRegisteredMeter("state/copy", nil)
+	stateSnapshotMeter = metrics.NewRegisteredMeter("state/snapshot", nil)
 )
