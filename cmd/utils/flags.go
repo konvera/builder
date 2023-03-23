@@ -793,6 +793,24 @@ var (
 		Value:    "",
 		Category: flags.BuilderCategory,
 	}
+	// Builder Protect RPC settings
+	ProtectEnabledFlag = &cli.BoolFlag{
+		Name:     "protect",
+		Usage:    "Enable the Protect-RPC server",
+		Category: flags.BuilderCategory,
+	}
+	ProtectListenAddrFlag = &cli.StringFlag{
+		Name:     "protect.addr",
+		Usage:    "Protect-RPC server listening interface",
+		Value:    node.DefaultHTTPHost,
+		Category: flags.BuilderCategory,
+	}
+	ProtectPortFlag = &cli.IntFlag{
+		Name:     "protect.port",
+		Usage:    "Protect-RPC server listening port",
+		Value:    10000+node.DefaultHTTPPort,
+		Category: flags.BuilderCategory,
+	}
 	// RPC settings
 	IPCDisabledFlag = &cli.BoolFlag{
 		Name:     "ipcdisable",
@@ -1294,6 +1312,23 @@ func SplitAndTrim(input string) (ret []string) {
 	}
 	return ret
 }
+
+/*
+// setProtect creates the Protect RPC listener interface string from the set
+// command line flags, returning empty if the Protect endpoint is disabled.
+func setProtect(ctx *cli.Context, cfg *node.Config) {
+	if ctx.Bool(ProtectEnabledFlag.Name) && cfg.ProtectHost == "" {
+		cfg.ProtectHost = "127.0.0.1"
+		if ctx.IsSet(ProtectListenAddrFlag.Name) {
+			cfg.ProtectHost = ctx.String(ProtectListenAddrFlag.Name)
+		}
+	}
+
+	if ctx.IsSet(ProtectPortFlag.Name) {
+		cfg.ProtectPort = ctx.Int(ProtectPortFlag.Name)
+	}
+}
+*/
 
 // setHTTP creates the HTTP RPC listener interface string from the set
 // command line flags, returning empty if the HTTP endpoint is disabled.

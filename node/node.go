@@ -57,6 +57,7 @@ type Node struct {
 	lock          sync.Mutex
 	lifecycles    []Lifecycle // All registered backends, services, and auxiliary services that have a lifecycle
 	rpcAPIs       []rpc.API   // List of APIs currently provided by the node
+	protect       *httpServer //
 	http          *httpServer //
 	ws            *httpServer //
 	httpAuth      *httpServer //
@@ -152,6 +153,7 @@ func New(conf *Config) (*Node, error) {
 	}
 
 	// Configure RPC servers.
+	node.protect = newHTTPServer(node.log, conf.HTTPTimeouts)
 	node.http = newHTTPServer(node.log, conf.HTTPTimeouts)
 	node.httpAuth = newHTTPServer(node.log, conf.HTTPTimeouts)
 	node.ws = newHTTPServer(node.log, rpc.DefaultHTTPTimeouts)
@@ -461,6 +463,19 @@ func (n *Node) startRPC() error {
 		return nil
 	}
 
+	// Set up Protect.
+	//if n.config.ProtectHost != "" {
+	protect := []rpc.API{}
+	for _, api := range n.rpcAPIs {
+		if api.Version == "protect" {
+			protect = append(protect, api)
+		}
+	}
+	// Configure protect unauthenticated HTTP.
+	if err := initHttp(n.protect, protect, n.config.HTTPPort+10000); err != nil {
+		return err
+	}
+	//}
 	// Set up HTTP.
 	if n.config.HTTPHost != "" {
 		// Configure legacy unauthenticated HTTP.
